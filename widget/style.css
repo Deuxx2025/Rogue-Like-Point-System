@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: transparent;
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    text-shadow: 3px 3px 0px black;
+}
+
+#widget-container {
+    display: flex;
+    align-items: row;
+    align-items: flex-end;
+}
+
+#coin-sack {
+    font-size: 40px;
+    cursor: pointer;
+}
+
+#coin-sack-img {
+    width: 64px;
+    image-rendering: pixelated;
+}
+
+#point-display {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 7px;
+}
+
+.floating-points {
+    position: absolute;
+    color: gold;
+    font-size: 10px;
+    text-shadow: 2px 2px 0px black;
+    animation: floatUp 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+.spending-points {
+    position: absolute;
+    left: 30px;
+    color: red;
+    font-size: 10px;
+    text-shadow: 2px 2px 0px black;
+    animation: floatDown 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
+@keyframes floatDown {
+    0% {
+        opacity: 1;
+        transform: translateY(-50px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(0)
+    }
+}

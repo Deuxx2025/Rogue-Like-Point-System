@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBPS Control Panel</title>
+</head>
+<body>
+    <h1>RBPS Control Panel</h1>
+
+    <h2>Twitch Settings</h2>
+    <label>Client ID</label>
+    <input type="text" id="twitch-client-id" placeholder="Twitch Client ID">
+
+    <label>Client Secret</label>
+    <input type="text" id="twitch-client-secret" placeholder="Twitch Client Secret">
+
+    <label>Username</label>
+    <input type="text" id="twitch-username" placeholder="Twitch Username">
+
+    <label>Bot Username</label>
+    <input type="text" id="twitch-bot-username" placeholder="Bot Username">
+
+    <label>Bot Token</label>
+    <input type="text" id="twitch-bot-token" placeholder="Bot Token (oauth:...)">
+
+    <h2>YouTube Settings</h2>
+    <label>Client ID</label>
+    <input type="text" id="youtube-client-id" placeholder="YouTube Client ID">
+
+    <label>Client Secret</label>
+    <input type="text" id="youtube-client-secret" placeholder="YouTube Client Secret">
+
+    <label>Refresh Token</label>
+    <input type="text" id="youtube-refresh-token" placeholder="YouTube Refresh Token">
+
+    <label>Fallback Playlist ID</label>
+    <input type="text" id="youtube-playlist-id" placeholder="PLxxxxxxxx or leave empty for LL">
+
+    <label>Redeemable Playlist ID</label>
+    <input type="text" id="youtube-redeemable-id" placeholder="PLxxxxxxxx">
+
+    <div id="reauth-section" style="display:none;">
+        <p> YouTube token expired or missing </p>
+        <button id="reauth-btn">Reauthorize YouTube</button>
+    </div>
+
+    <button onclick="saveSettings()">Save Settings</button>
+    <button onclick="startServer()">Launch</button>
+
+    <script src="control-panel.js"></script>
+</body>
+</html>
