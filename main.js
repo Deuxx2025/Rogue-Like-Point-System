@@ -39,7 +39,7 @@ const redemptions = [
 //#endregion
 
 //#region Variables
-const RECENT_BUFFER = 25;
+const RECENT_BUFFER = 35;
 const MENU_COOLDOWN = 15000;
 let currentSkin = 'Zuko-Haruki';
 let pointsPool = 0;

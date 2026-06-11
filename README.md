@@ -1,7 +1,7 @@
 # Rogue Like Point System (RLPS) Game Design Document
 
 ## 1.- Introduction
-Rogue Like Point System is a game made with JavaScrip and HTML hence is played on a web browser or even inside the Twitch app if the `user` is using mobile to see the stream, used only as a Twitch stream overlay, this means that it is not a stand alone page that the `player` can interact but it is a `community base` game that the sole goal is to reach a certain ammount of points before the `stream ends`.
+Rogue Like Point System is a game made with JavaScrip and HTML hence is played on a web browser because the game is inside of a Twitch stream or even inside the Twitch app if the `user` is using mobile to see the stream, used only as a Twitch stream overlay, this means that it is not a stand alone page that the `player` can interact but it is a `community base` game that the sole goal is to reach a certain ammount of points before the `stream ends`.
 
 ## 2.- Playablity/Gameplay
 Since this is a `Twitch overlay` it does not have the typical character to move or things for a player to do but it works on a constraint that there is `no player`, there is a point generation that is given to `all players` (or in this case users). So if there are 10 people in the stream and some want to `win` the game but others can sabotage by spending the points in the already working `redeem system` that the tool offers.
@@ -25,9 +25,13 @@ There is no `player` in this game then another way to convay action is needed, s
 
 A `user` in chat decides to open up the `!skins` section because in the lower part of the screen they can see the character on the left corner with a text that says "level 1" then a large box with semi transparent background has information of what the skin do and what does it generates, finally there is the total points and the multiplier on the right corner. 
 
-Now a voting message is in chat saying "Go to !skins menu or stay in current menu, type !vote and the number of your choice", this will depend on how many action there are on the current menu.
+Now a voting message is in chat saying "Go to 1.-!skins menu | 2.-stay in current menu, type `!vote` and the number of your choice", this will depend on how many action there are on the current menu.
 
 So to change menu the `users` in chat need to be on the same page so there is a 5 minute window to vote, if all users `voted` then the issue is resolved immediately and the vote system is in cooldown.
+
+The way that this system works is that TMI checks if a `user` has already used the command so it prevents to vote again, the option with the most votes is granted, if all the options have the same amount of votes then a random option is chosen.
+
+In the lower section of the screen there is a small UI element that changes colors depending on the `!vote` cooldown, if its available then the command is open for use, if its red then its in cooldown and if any `user` types a command that involves the game system then the bot will respond with a "Voting is back online in: ${time}" basically it will print the time left on the cooldown.  
 
 ## 3.- Skins
 In the original RBPS there are skins of characters so to use the already existing architecture this skins will have levels and those levels grant `advantages` towards the point generation, For now all chance are `random`, in future updates there will be a better algorithm. All level ups are tied to the previous one, hence you cannot have a level 3 skin without having a level 1 or 2. EX skins are level max at unlock but the unlocks are tied to constrains. All EX skin work either when they are active or inactive. You can only gain the `advantages` when the skin is in use.
@@ -37,7 +41,7 @@ Base skin of the game, because when this game was designed the creator was playi
 
 `Level 1`||
 pasive skill `Miner`: You generate aditional points, every minute you'll mine a random Minecraft ore and depending of the ore you'll get rewarded.||
-`aditional info`: coal = 1 point | copper = 2 points | lapiz lazuli = 3 points | iron = 5 points | redstone = 6 points | gold = 8 points | emerald = 12 points | diamonds = 15 points | netherite = 25 points||
+`aditional info`: coal = 1 point | copper = 2 points | lapiz lazuli = 3 points | iron = 5 points | redstone = 6 points | gold = 8 points | emerald = 12 points | diamond = 15 points | netherite = 25 points||
 cost: free
 
 `level 2`||
@@ -160,3 +164,39 @@ pasive skill `The mad chemist`: Make all the effects of the EX skins 1.5 times s
 
 ## 4.- Art
 The majority of drawings are vector art but the UI is meant to be arranged as an RPG menu, there will not be many graphic components because there is a whole stream happening in the background but the desired outcome is to show only vital information so that the `user` doesn't get lost in the menus.
+
+### 4.1.- Asset list
+This section contains all the assets needed to enhance the immersion of the game. All the assets will be in the .gitignore to avoid redistribution.
+
+#### 4.1.1.- Minecraft assets
+Coal||copper||lapiz lazuli||iron||redstone||gold||emerald||diamond||netherite||rotten flesh||string||bone||gun powder||ender pearl.
+
+#### 4.1.2.- Black ops 4 zombies 
+Bonus points||nuke||carpenter||double points||max ammo||full power
+
+## 5.- Menus
+The `user` needs to know what they can do, so a menu system was created, it is a box with options on the lower part of the screen, the options that can be interacted with are highlighted in yellow while the other words that appear on the screen does not have any highlight at all.
+
+## 6.- Sounds
+All sounds regarding this game will be in the .gitignore file since it will be the original sounds of the games the characters are referencing.
+
+### 6.1.- SFX list
+This section contains all the audio files that will run when the ability is active although the abilities may fire each minute the sound will ever so often.
+
+#### 6.1.1.- Minecraft
+XP sound small when generating an ore or a drop||level up sound when upgrading to level 2||Rare achievement sound when achieved level 3.
+
+#### 6.1.2.- Genshin Impact
+Chest opening for level 1||reward sound for level 2||banner pull depending on the selection for level 3||level up sound effect for upgrading levels.
+
+#### 6.1.3.- Kimetsu no Yaiba
+Default sound effects from the tool.
+
+#### 6.1.4.- League of Legends
+Minion execute sound||Kill sound||Nexus explotion sound||level up sound per upgrade.
+
+#### 6.1.5.- Kingdom 2 Crowns
+Coin sound effect||peasant acquired sound effect||Boat complete sound effect for level 3||Item sound effect for level 2||Construction sound effect for level 1.
+
+#### Black ops 4 zombies 
+Sound effect for each power up in level 3||special sound effects.
