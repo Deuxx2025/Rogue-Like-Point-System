@@ -9,6 +9,8 @@ const PORT = 3000;
 const wss = new WebSocket.Server({port: 8080});
 const tmi = require('tmi.js');
 const fs = require('fs');
+const { gameEvents, startGame, endGame, getGameState } = require('./game')
+const { setupBotCommands } = require('./bot')
 const { google } = require('googleapis');
 const { oauth2 } = require('googleapis/build/src/apis/oauth2');
 const { title } = require('process');
@@ -521,6 +523,7 @@ async function startServer() {
     console.log('Twitch token acquired');
     await client.connect();
     console.log('Bot connected to chat')
+    setupBotCommands(client);
     await new Promise(resolve => setTimeout(resolve, 6000))
     streamPlaylist = await getPlaylist();
     if (streamPlaylist. length === 0) {
