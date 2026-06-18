@@ -41,7 +41,7 @@ const redemptions = [
 //#endregion
 
 //#region Variables
-const RECENT_BUFFER = 35;
+const RECENT_BUFFER = 40;
 const MENU_COOLDOWN = 15000;
 let currentSkin = 'Zuko-Haruki';
 let pointsPool = 0;
@@ -110,6 +110,17 @@ wss.on('connection', (ws) => {
     });
 });
 
+gameEvents.on('state-changed', (state) => {
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({
+                type: 'game-state',
+                ...state
+            }))
+        }
+    })
+})
+
 if (!process.env.YOUTUBE_REFRESH_TOKEN) {
     console.log('No YouTube token found, visit:', authUrl);
 }
@@ -142,6 +153,7 @@ client.on('message', (channel, tag, message, self) => {
         const menuMessage = redemptions
             .map(r => `!${r.name} (${r.cost}) - ${r.description}`)
             .join(' | ');
+        const { gameState } = getGameState();
         
         if (now - lastMenuCall < MENU_COOLDOWN) {
             client.say(channel, '!Menu is on cooldown');
@@ -150,7 +162,11 @@ client.on('message', (channel, tag, message, self) => {
 
         lastMenuCall = now
 
-        client.say(channel, `RBPS Menu: ${menuMessage}`);
+        if (gameState === 'idle') {
+            client.say(channel, `RBPS Menu: ${menuMessage}`);
+        } else {
+            client.say(channel, 'Game active, Check HUD for more info | !soundbits (10) | !nextsong (150) available')
+        }
     }
 
     /*
@@ -176,7 +192,11 @@ client.on('message', (channel, tag, message, self) => {
     }
 
     if (message.toLowerCase() === '!skins') {
-        client.say(channel, `Available skins: ${availableSkins.join(' | ')} | use !swap skinname to change`)
+        const { gameState } = getGameState();
+
+        if (gameState === 'idle') {
+            client.say(channel, `Available skins: ${availableSkins.join(' | ')} | use !swap skinname to change`);
+        }
     }
 
     if (message.toLowerCase().startsWith('!nextsong')) {
@@ -252,44 +272,51 @@ client.on('message', (channel, tag, message, self) => {
         const skinExists = fs.existsSync(`./assets/skins/${skinName}.png`);
         const redemption = redemptions.find(r => r.name === 'skins')
         const streamer = isStreamer(tag)
+        const { gameState } = getGameState();
 
-        if (!skinExists) {
-            client.say(channel, 'Skin not found, please type !skins to see available skins');
-            return;
-        }
-
-        if (skinName === currentSkin) {
-            client.say(channel, `${skinName} is already active`);
-            return;
-        }
-
-        if (!streamer && pointsPool < redemption.cost) {
-            client.say(channel, 'Not enough points, current pool: ' + Math.floor(pointsPool));
-            return;
-        }
-
-        if (!streamer){
-            pointsPool -= redemption.cost;
-        }
-        
-        currentSkin = skinName; 
-        client.say(channel, streamer
-            ? `All to the kings contempt; clothes changed`
-            : `Swapping  ${skinName}, current pool: ` + Math.floor(pointsPool));
-
-        wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify({
-                    type: 'skin',
-                    skin: skinName,
-                    message: 'Looking fine',
-                    ...((!streamer) && {
-                        spendSound: 'sfx/spend-sound',
-                        spent: redemption.cost
-                    })
-                }));
+        if (gameState === 'idle') {
+            if (!skinExists) {
+                client.say(channel, 'Skin not found, please type !skins to see available skins');
+                return;
             }
-        });
+
+            if (skinName === currentSkin) {
+                client.say(channel, `${skinName} is already active`);
+                return;
+            }
+
+            if (!streamer && pointsPool < redemption.cost) {
+                client.say(channel, 'Not enough points, current pool: ' + Math.floor(pointsPool));
+                return;
+            }
+
+            if (!streamer){
+                pointsPool -= redemption.cost;
+            }
+        
+            currentSkin = skinName; 
+            client.say(channel, streamer
+                ? `All to the kings contempt; clothes changed`
+                : `Swapping  ${skinName}, current pool: ` + Math.floor(pointsPool));
+
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({
+                        type: 'skin',
+                        skin: skinName,
+                        message: 'Looking fine',
+                        ...((!streamer) && {
+                            spendSound: 'sfx/spend-sound',
+                            spent: redemption.cost
+                        })
+                    }));
+                }
+            });
+        } else {
+            client.say(channel, 'The game is live, this command is blocked')
+        }
+
+        
     }
 
     if (message.toLowerCase().startsWith('!queue')) {

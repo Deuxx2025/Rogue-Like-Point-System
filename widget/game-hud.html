@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLPS HUD</title>
+    <link rel="stylesheet" href="game-hud.css">
+</head>
+<body>
+    <div id="hud-container">
+        <div id="game-state">Type !start to play</div>
+
+        <div id="active-content" style="display:none;">
+            <div id="active-skin">No skin active</div>
+            <div id="skin-level">level: </div>
+            <div id="passive-name"></div>
+            <div id="passive-description"></div>
+            <div id="last-drop"></div>
+            <div id="next-drop-timer"></div>
+        </div>
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'game-state'){
+                console.log('Game state:', data.gameState)
+
+                if (data.gameState === 'active') {
+                    document.getElementById('game-state').style.display = 'none';
+                    document.getElementById('active-content').style.display = 'block';
+                } else {
+                    document.getElementById('game-state').textContent = 'Type !start to play';
+                    document.getElementById('game-state').style.display = 'block';
+                    document.getElementById('active-content').style.display = 'none'; 
+                }
+            } 
+        };
+    </script>
+</body>
+</html>
